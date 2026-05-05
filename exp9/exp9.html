@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping Website with Event Handling</title>
+<style>
+body{
+font-family:Arial;
+margin:0;
+background:#f2f2f2;
+text-align:center;
+}
+h1{
+background:teal;
+color:white;
+padding:15px;
+margin:0;
+}
+.container{
+background:white;
+width:350px;
+margin:20px auto;
+padding:20px;
+box-shadow:0 0 10px gray;
+border-radius:10px;
+}
+input{
+width:90%;
+padding:8px;
+margin:8px;
+}
+button{
+padding:10px;
+width:95%;
+background:teal;
+color:white;
+border:none;
+cursor:pointer;
+margin:5px;
+}
+.sortbtn{
+background:black;
+width:180px;
+}
+.products{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+margin-top:20px;
+}
+.card{
+background:white;
+width:220px;
+margin:15px;
+padding:15px;
+box-shadow:0 0 10px gray;
+border-radius:10px;
+}
+.card img{
+width:180px;
+height:150px;
+object-fit:cover;
+}
+.shopbtn{
+background:orange;
+}
+</style>
+</head>
+<body>
+
+<h1 onmouseover="titleBig()" onmouseout="titleNormal()">Mini Shopping Website</h1>
+
+<div class="container">
+<h2>Login Form</h2>
+<input type="text" id="email" placeholder="Enter Email" onfocus="fc(this)" onblur="bc(this)"><br>
+<input type="password" id="pass" placeholder="Enter Password" onfocus="fc(this)" onblur="bc(this)"><br>
+<button onclick="login()">Login</button>
+
+<h2>Add Product</h2>
+<input type="text" id="pname" placeholder="Product Name" onfocus="fc(this)" onblur="bc(this)"><br>
+<input type="number" id="price" placeholder="Price" onfocus="fc(this)" onblur="bc(this)"><br>
+<input type="number" id="qty" placeholder="Quantity" onfocus="fc(this)" onblur="bc(this)"><br>
+<input type="file" id="img" onchange="imgMsg()"><br>
+<button onclick="addProduct()">Store Product</button>
+<p id="msg"></p>
+</div>
+
+<button class="sortbtn" onclick="sortLow()">Sort Low to High</button>
+<button class="sortbtn" onclick="sortHigh()">Sort High to Low</button>
+
+<div class="products" id="productList"></div>
+
+<script>
+let products = [
+{pname:"Casual Shirt", price:799, qty:10, img:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"},
+{pname:"Running Shoes", price:1499, qty:5, img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff"},
+{pname:"Smart Watch", price:1999, qty:7, img:"https://images.unsplash.com/photo-1517430816045-df4b7de11d1d"}
+];
+
+function fc(x){
+x.style.background="lightyellow";
+}
+
+function bc(x){
+x.style.background="white";
+}
+
+function titleBig(){
+document.querySelector("h1").style.background="black";
+}
+
+function titleNormal(){
+document.querySelector("h1").style.background="teal";
+}
+
+function imgMsg(){
+document.getElementById("msg").innerHTML="Image Selected Successfully";
+}
+
+function login(){
+let e=document.getElementById("email").value;
+let p=document.getElementById("pass").value;
+
+if(e=="admin@gmail.com" && p=="1234")
+alert("Login Successful");
+else
+alert("Invalid Login");
+}
+
+function addProduct(){
+let pname=document.getElementById("pname").value;
+let price=document.getElementById("price").value;
+let qty=document.getElementById("qty").value;
+let file=document.getElementById("img").files[0];
+
+if(pname==""||price==""||qty==""||!file){
+alert("Fill all fields");
+return;
+}
+
+let reader = new FileReader();
+reader.onload=function(e){
+products.push({
+pname:pname,
+price:Number(price),
+qty:qty,
+img:e.target.result
+});
+displayProducts();
+alert("Product Stored Successfully");
+}
+reader.readAsDataURL(file);
+}
+
+function displayProducts(){
+let data="";
+products.forEach(p=>{
+data += `
+<div class="card" onmouseover="this.style.boxShadow='0 0 20px black'" onmouseout="this.style.boxShadow='0 0 10px gray'">
+<img src="${p.img}">
+<h3>${p.pname}</h3>
+<p>Price: ₹${p.price}</p>
+<p>Available: ${p.qty}</p>
+<button class="shopbtn" onclick="alert('Product Added To Cart')">Shop Now</button>
+</div>
+`;
+});
+document.getElementById("productList").innerHTML=data;
+}
+
+function sortLow(){
+products.sort((a,b)=>a.price-b.price);
+displayProducts();
+}
+
+function sortHigh(){
+products.sort((a,b)=>b.price-a.price);
+displayProducts();
+}
+
+displayProducts();
+</script>
+
+</body>
+</html>
